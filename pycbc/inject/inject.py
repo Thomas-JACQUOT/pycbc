@@ -633,13 +633,13 @@ class CBCHDFInjectionSet(_HDFInjectionSet):
         # systematics
         cal_errors = {
 
-                "H1": (0.03, 1),
-                "L1": (0.03, 1),
-                "V1": (0.035, 1.1)
+                "H1": (0.03, 0),
+                "L1": (0.03, 0),
+                "V1": (0.035, 0)
 
                 }
         cal_systematics = 1
-        mu_log = np.log((cal_systematics**2)/(np.sqrt(cal_systematics**2 + cal_errors[detectorèname][0]**2)))
+        mu_log = np.log((cal_systematics**2)/(np.sqrt(cal_systematics**2 + cal_errors[detector_name][0]**2)))
         sigma_log = np.sqrt(np.log(1+(cal_errors[detector_name][0]**2)/cal_systematics**2)) 
         cal_factor = np.random.lognormal(mu_log, sigma_log)
 
@@ -655,7 +655,7 @@ class CBCHDFInjectionSet(_HDFInjectionSet):
             strain = projector(detector_name,
                                inj, hp, hc, distance_scale=distance_scale)
 
-            strain.coa_phase = np.vonmises(strain.coa_phase, cal_errors[detector_name][1])
+            #strain.coa_phase = np.vonmises(strain.coa_phase, cal_errors[detector_name][1])
             strain /= cal_factor
         return strain
 
