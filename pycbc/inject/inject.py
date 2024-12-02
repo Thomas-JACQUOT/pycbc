@@ -633,16 +633,16 @@ class CBCHDFInjectionSet(_HDFInjectionSet):
         # systematics
         cal_errors = {
 
-                "H1": (0.03, 0),
-                "L1": (0.03, 0),
-                "V1": (0.035, 0)
+                "H1": (0.036, 0),
+                "L1": (0.056, 0),
+                "V1": (0, 0)
 
                 }
-        cal_systematics = 1
-        mu_log = np.log((cal_systematics**2)/(np.sqrt(cal_systematics**2 + cal_errors[detector_name][0]**2)))
-        sigma_log = np.sqrt(np.log(1+(cal_errors[detector_name][0]**2)/cal_systematics**2)) 
+        cal_offset = 1
+        mu_log = np.log((cal_offset**2)/(np.sqrt(cal_offset**2 + cal_errors[detector_name][0]**2)))
+        sigma_log = np.sqrt(np.log1p((cal_errors[detector_name][0]**2)/cal_offset**2)) 
         cal_factor = np.random.lognormal(mu_log, sigma_log)
-
+        #inj['coa_phase'] = np.vonmises(inj['coa_pahse'], cal_errors[detector_name][1])
         if inj['approximant'] in fd_det:
             strain = get_td_det_waveform_from_fd_det(
                         inj, delta_t=delta_t, f_lower=f_l,
@@ -656,7 +656,7 @@ class CBCHDFInjectionSet(_HDFInjectionSet):
                                inj, hp, hc, distance_scale=distance_scale)
 
             #strain.coa_phase = np.vonmises(strain.coa_phase, cal_errors[detector_name][1])
-            strain /= cal_factor
+        strain /= cal_factor
         return strain
 
     def end_times(self):
